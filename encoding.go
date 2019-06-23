@@ -15,31 +15,10 @@ type Encoding struct {
 	padding int
 }
 
-// Option sets a number of optional parameters on the encoding
-func (e *Encoding) Option(opts ...option) *Encoding {
-	for _, opt := range opts {
-		opt(e)
-	}
-
-	// Return the encoding to allow chaining
-	return e
-}
-
 // NewEncoding returns a new Encoding defined by the given alphabet
 func NewEncoding(encoder string) *Encoding {
 	return &Encoding{
 		encode: encoder,
-	}
-}
-
-// Configurable options for an Encoding
-type option func(*Encoding)
-
-// Padding sets the minimum string length returned when encoding
-// strings shorter than this will be left padded with zeros
-func Padding(n int) option {
-	return func(e *Encoding) {
-		e.padding = n
 	}
 }
 
@@ -101,11 +80,11 @@ func (e *Encoding) EncodeBigInt(n *big.Int) string {
 }
 
 // DecodeToBytes returns a byte array from a base62 encoded string
-func (e *Encoding) DecodeToBytes(s string,pad ...int) []byte {
-	nBytes:=e.DecodeToBigInt(s).Bytes()
-	if len(pad)>0&&pad[0]>0&&len(nBytes)<pad[0]{
-		paddingBytes := make([]byte, pad[0]-len(nBytes))
-		nBytes=append(paddingBytes,nBytes...)
+func (e *Encoding) DecodeToBytes(s string, padding ...int) []byte {
+	nBytes := e.DecodeToBigInt(s).Bytes()
+	if len(padding) > 0 && padding[0] > 0 && len(nBytes) < padding[0] {
+		paddingBytes := make([]byte, padding[0]-len(nBytes))
+		nBytes = append(paddingBytes, nBytes...)
 	}
 	return nBytes
 }
@@ -175,4 +154,9 @@ func (e *Encoding) pad(s string, minlen int) string {
 
 	format := fmt.Sprint(`%0`, strconv.Itoa(minlen), "s")
 	return fmt.Sprintf(format, s)
+}
+
+// SetEncodePadding sets the padding of encoded string
+func (e *Encoding) SetEncodePadding(n int) {
+	e.padding = n
 }
