@@ -43,7 +43,7 @@ func Padding(n int) option {
 	}
 }
 
-// EncodeInt64 returns the base62 encoding of b
+// EncodeBytes returns the base62 encoding of b
 func (e *Encoding) EncodeBytes(b []byte) string {
 	n := new(big.Int)
 	n.SetBytes(b)
@@ -100,7 +100,7 @@ func (e *Encoding) EncodeBigInt(n *big.Int) string {
 	return s
 }
 
-// DecodeToBytes return a byte array from a base62 encoded string
+// DecodeToBytes returns a byte array from a base62 encoded string
 func (e *Encoding) DecodeToBytes(s string) []byte {
 	return e.DecodeToBigInt(s).Bytes()
 }
