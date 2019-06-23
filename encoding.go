@@ -101,8 +101,13 @@ func (e *Encoding) EncodeBigInt(n *big.Int) string {
 }
 
 // DecodeToBytes returns a byte array from a base62 encoded string
-func (e *Encoding) DecodeToBytes(s string) []byte {
-	return e.DecodeToBigInt(s).Bytes()
+func (e *Encoding) DecodeToBytes(s string,pad ...int) []byte {
+	nBytes:=e.DecodeToBigInt(s).Bytes()
+	if len(pad)>0&&pad[0]>0&&len(nBytes)<pad[0]{
+		paddingBytes := make([]byte, pad[0]-len(nBytes))
+		nBytes=append(paddingBytes,nBytes...)
+	}
+	return nBytes
 }
 
 // DecodeToInt64 decodes a base62 encoded string
